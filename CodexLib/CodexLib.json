@@ -1,0 +1,12 @@
+{
+    "Author": "Aimsucks",
+    "Name": "Codex Library",
+    "Punchline": "Providing tools to interact with a repository of presets for FFXIV plugins. ",
+    "Description": "This library is designed to be a resource to help interact the Codex API for implementing it in your plugin to fetch FFXIV plugin presets.",
+    "ApplicableVersion": "any",
+    "Tags": [
+        "codex",
+        "api",
+        "presets"
+    ]
+}
