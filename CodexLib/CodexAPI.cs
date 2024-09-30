@@ -13,9 +13,12 @@ public static class CodexAPI
     private static readonly string EscapedPluginName = Uri.EscapeDataString(Codex.PluginName);
     private static readonly string APIUrl = $"{BaseUrl}/{EscapedPluginName}";
 
-    // Reusable HTTP client
     private static readonly HttpClient HttpClient = new();
 
+    /// <summary>
+    /// Calls the Codex API "presets" endpoint for the plugin specified in initialization. This will query the database for all the top-level categories, subcategories, and associated presets down to a recursion of 4 subcategories.
+    /// </summary>
+    /// <returns>Asynchronous task that returns a list of categories, subcategories, and presets from the Codex API</returns>
     public static async Task<List<CodexCategory>?> GetPresets()
     {
         try
@@ -35,6 +38,12 @@ public static class CodexAPI
         }
     }
 
+    /// <summary>
+    /// Calls the Codex API "updates" endpoint with a query string containing all the preset IDs specified in the function parameters for the plugin specified in initialization. This queries the database for all presets from the specified plugin and filters the list based on the provided query.
+    /// </summary>
+    /// <param name="presetIds">A list of preset ID integers</param>
+    /// <returns>Asynchronous task that returns a list presets from the Codex API</returns>
+    /// <exception cref="ArgumentException">A list of preset ID integers was not provided</exception>
     public static async Task<List<CodexPreset>> GetPresetUpdates(List<int> presetIds)
     {
         if (presetIds.Count == 0) throw new ArgumentException("At least one preset ID must be provided.");
@@ -59,11 +68,13 @@ public static class CodexAPI
         }
     }
 
-    /*
-     * In order to use this submodule, you will need to implement the interface IPreset in your config file and
-     * assign it to your preset's class.
-     */
-
+    /// <summary>
+    /// Calls the Codex API "updates" endpoint with a query string containing all the presets specified in the function parameters for the plugin specified in initialization. This queries the database for all presets from the specified plugin and filters the list based on the provided query.
+    /// </summary>
+    /// <param name="presets">A list of presets containing a Metadata object</param>
+    /// <typeparam name="T">IPreset interface with a Metadata object with a Version integer and an ID integer </typeparam>
+    /// <returns>Asynchronous task that returns a list presets from the Codex API</returns>
+    /// <exception cref="ArgumentException">A list of preset ID integers was not provided, likely because the IPresets that were passed had incorrect Metadata</exception>
     public static async Task<List<CodexPreset>> GetPresetUpdates<T>(List<T> presets) where T : IPreset
     {
         if (presets.Count == 0) throw new ArgumentException("At least one preset must be provided.");
